@@ -1,6 +1,3 @@
-/**
- * Created by yish on 2020/08/11.
- */
 import '../dist';
 
 describe('Math', () => {

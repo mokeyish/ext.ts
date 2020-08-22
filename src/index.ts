@@ -5,6 +5,9 @@ import './math';
 import './promise';
 import './sleep';
 
-export { UniformRandom, NormalRandom, MPRandGauss, RandGamma } from './random'
+export {
+    Random, RandomEngineFactory, RandomEngine,
+    GammaDistribution, UniformDistribution, MPGaussDistribution, NormalDistribution
+} from './random';
 
 export { assert } from './assert';
