@@ -45,12 +45,14 @@ export class Random implements Random {
 
     /**
      * Draw samples from a uniform distribution.
-     * @param min
-     * @param max
-     * @param size
-     * @param dtype
+     * @param [min=0] float optional Lower boundary of the output interval.
+     *         All values generated will be greater than or equal to low.  The default value is 0.
+     * @param [max=1]
+     * @param [size=1] float of floats Upper boundary of the output interval.
+     *         All values generated will be less than or equal to high.  The default value is 1.0.
+     * @param [dtype='float32']
      */
-    uniform(min = 0, max = 1, size: number, dtype: keyof RandNormalDataTypes = 'float32'): number[] {
+    uniform(min = 0, max = 1, size: number = 1, dtype: keyof RandNormalDataTypes = 'float32'): number[] {
         if (dtype !== 'float32' && dtype !== 'int32') {
             throw new Error(`Unsupported data type ${dtype}`);
         }
