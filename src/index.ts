@@ -3,7 +3,6 @@ import './date';
 import './iterable-iterator';
 import './math';
 import './promise';
-import './sleep';
 
 export {
     Random, RandomEngineFactory, RandomEngine,
