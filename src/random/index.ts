@@ -1,28 +1,34 @@
 import { RandomEngineFactory } from './random-engine-factory';
 import {
-    Engine,
-    uint32,
-    uint53,
+    bool,
     date,
-    hex,
-    string,
-    uuid4,
     dice,
     die,
-    sample,
-    shuffle,
+    Engine,
+    hex,
+    int32,
+    int53,
+    int53Full,
+    integer,
     pick,
-    bool,
     real,
     realZeroToOneExclusive,
     realZeroToOneInclusive,
-    integer,
-    int53Full,
-    int53,
+    sample,
+    shuffle,
+    string,
+    uint32,
+    uint53,
     uint53Full,
-    int32
+    uuid4
 } from 'random-js';
-import { GammaDistribution, MPGaussDistribution, RandNormalDataTypes, UniformDistribution } from './distributions';
+import {
+    GammaDistribution,
+    MPGaussDistribution,
+    DirichletDistribution,
+    RandNormalDataTypes,
+    UniformDistribution
+} from './distributions';
 
 export * from './distributions';
 export * from './random-engine-factory';
@@ -62,6 +68,34 @@ export class Random implements Random {
             res[i] = random.next();
         }
         return res;
+    }
+
+    choice<T>(a: T[], probs?: number[]) : T | undefined {
+        const p = Math.random();
+        if (probs === undefined) {
+            return a[Math.floor(p * a.length)];
+        } else {
+            if (a.length !== probs.length) {
+                throw new Error('The length of probs is not equal to length of a');
+            }
+            const sortedIndices = Array.range(probs.length).sort((_a, _b) => probs[_b] - probs[_a]);
+            const sortedWeights = sortedIndices.map(i => probs[i]);
+            const runningTotals = sortedWeights.comsum();
+
+            const targetDist = p * runningTotals.last()!;
+
+            let guessIndex = 0;
+            while (true) {
+                if (runningTotals[guessIndex] > targetDist) {
+                    break;
+                }
+                const weight = sortedWeights[guessIndex];
+                const hopDistance = targetDist - runningTotals[guessIndex];
+                const hopIndex = 1 + Math.floor(hopDistance / weight);
+                guessIndex += hopIndex;
+            }
+            return a[sortedIndices[guessIndex]];
+        }
     }
 
     /**
@@ -107,6 +141,11 @@ export class Random implements Random {
             res[i] = rgamma.nextValue();
         }
         return res;
+    }
+
+    dirichlet(alpha: number[], beta: number = 1.0): number[] {
+        const d = new DirichletDistribution(alpha, beta, this.engine);
+        return d.sample();
     }
 
 

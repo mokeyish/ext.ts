@@ -27,6 +27,17 @@ const a = [1, 2, 4];
 const b = [1, 2, 5];
 console.log(a.sequenceEqual(b)) // false
 ```
+2. min/avg/max/argmax
+```ts
+import '@tszone/ext';
+
+const a = [1, 2, 4];
+console.log(a.min()); // 1
+console.log(a.max()); // 4
+console.log(a.argmax()); // 2
+
+
+```
 
 ## Promise
 1. yield
